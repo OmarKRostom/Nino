@@ -49,31 +49,42 @@ def main():
 	function=6*(x**2)-6*x*y+2*(y**2)-x-2*y	#function to be evaluated (user defined)
 
 	intialCondition = np.array([0,0]) #intial condition (user defined)
-	numberOfIterations=2 #number of iterations (user defined)
+	numberOfIterations=4 #number of iterations (user defined)
 	MaxMinFlag=-1 #1 for maximize or -1 for minimize (user defined)
+	probLength=0.01 #(user defined)
 
 	deltaPartial(function)
 	pointOld=intialCondition
 			
 	for i in range(numberOfIterations):
 		print("Iteration number "+ str(i+1) +" : ")
-		if i==0:
-			partialDerivNew=partialDerivative(pointOld[0],pointOld[1])
-			directionNew=MaxMinFlag*partialDerivNew			
-		else:
-			partialDerivNew=partialDerivative(pointOld[0],pointOld[1])
-			directionNew=(MaxMinFlag*partialDerivNew)+(getMagnitudes(partialDerivNew,partialDerivOld)*directionOld)
+		if (i%2==0):
+			direction=np.array([1,0])
+		else: 
+		 	direction=np.array([0,1])	
 
-		pointNew=pointOld + l*directionNew
+		#testFunction = f(pointOld[0],pointOld[1])
+		positivePoint=pointOld+(probLength*direction)
+		testFunctionPositive = f(function,positivePoint[0],positivePoint[1])
+
+		negativePoint=pointOld-(probLength*direction)
+		testFunctionNegative = f(function,negativePoint[0],negativePoint[1])
+
+		if (MaxMinFlag==1):
+			if testFunctionPositive<testFunctionNegative:
+				direction = -1*direction	 
+		else:
+			if testFunctionPositive>testFunctionNegative:
+				direction = -1*direction
+			
+		pointNew=pointOld + l*direction
 		functionWithLamda=subF(function,pointNew[0],pointNew[1])
 		dFunctionWithLamda=derivative(functionWithLamda)
 		lamda=solveEqn(dFunctionWithLamda)
-		pointNew=pointOld+(lamda*directionNew) 	
+		pointNew=pointOld+(lamda*direction) 	
 		
 		pointOld=pointNew
-		directionOld=directionNew
-		partialDerivOld=partialDerivNew
-
+		
 		print "Point",(i+1)," : ",pointNew
 		   	
 	print "Point :",pointNew,", f(",pointNew[0],",",pointNew[1],")","=",f(function,pointNew[0],pointNew[1])
