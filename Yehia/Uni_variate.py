@@ -7,6 +7,10 @@ import math
 #creating basic variables; x and y and l=lambda
 x, y, l = symbols('x y l', real=True)
 
+#gradient vector (delta f) of the input function
+deltaF = np.array([0,0])
+
+
 #given a function and the variables in it; x and y, return the value of that function
 def f(function,X,Y):
 	return function.evalf(subs={x:X,y:Y})
@@ -14,6 +18,20 @@ def f(function,X,Y):
 #given a function and 2 variables, substitute the x and y in the function with the given variables
 def subF(function,X,Y):
 	return function.subs({x:X,y:Y})
+
+#given a function, set the gradient (delta f) of that function
+def gradientF(function):
+	fx=diff(function,x)
+	fy=diff(function,y)
+	global deltaF
+	deltaF=np.array([fx,fy])
+
+#given 2 points x and y, return the value of the gradient matrix at these points(delta f1)
+def partialGradient(X,Y):
+	global deltaF
+	#.n(chop=True) is used to chop the small numbers (to get exactly 0)
+	partial= np.array([deltaF[0].evalf(subs={x:X,y:Y}).n(chop=True),deltaF[1].evalf(subs={x:X,y:Y}).n(chop=True)])
+	return partial
 
 #given a function, return the derivative of that function
 def derivative(function):
@@ -44,9 +62,14 @@ def main():
 	#probe length e (user defined)
 	probLength=0.01
 
+	gradientF(function)#to check the stoppping creteria only in this method
 	pointOld=intialCondition
+
 			
 	for i in range(numberOfIterations):
+		if all(v==0 for v in partialGradient(pointOld[0],pointOld[1])):
+			optimum=1
+			break
 		print("Iteration number "+ str(i+1) +" : ")
 		if (i%2==0):
 			direction=np.array([1,0])
@@ -75,7 +98,8 @@ def main():
 		pointOld=pointNew
 		
 		print "Point",(i+1)," : ",pointNew
-		   	
+	if optimum:
+		print "Optimum solution"	   	
 	print "Point :",pointNew,", f(",pointNew[0],",",pointNew[1],")","=",f(function,pointNew[0],pointNew[1])
 	
 

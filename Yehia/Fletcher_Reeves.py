@@ -28,7 +28,8 @@ def gradientF(function):
 #given 2 points x and y, return the value of the gradient matrix at these points(delta f1)
 def partialGradient(X,Y):
 	global deltaF
-	partial= np.array([deltaF[0].evalf(subs={x:X,y:Y}),deltaF[1].evalf(subs={x:X,y:Y})])
+	#.n(chop=True) is used to chop the small numbers (to get exactly 0)
+	partial= np.array([deltaF[0].evalf(subs={x:X,y:Y}).n(chop=True),deltaF[1].evalf(subs={x:X,y:Y}).n(chop=True)])
 	return partial
 
 #given a function, return the derivative of that function
@@ -49,18 +50,23 @@ def getMagnitudes(matrix1,matrix2):
 def main():
 
 	#function to be evaluated (user defined)
-	function=6*(x**2)-6*x*y+2*(y**2)-x-2*y	
+	function=x-y+2*x**2+2*x*y+y**2	
 	#intial condition (user defined)
 	intialCondition = np.array([0,0])
 	#number of iterations (user defined) 
-	numberOfIterations=2
-	#maximum or minimum; 1 for maximize or -1 for minimize (user defined) 
+	numberOfIterations=10
+	#maximize or minimize; 1 for maximize or -1 for minimize (user defined) 
 	MaxMinFlag=-1 
+	#optimum solution (stoping creteria encountered--> partialGradient=[0 0])
+	optimum=0
 
 	gradientF(function)
 	pointOld=intialCondition
 			
 	for i in range(numberOfIterations):
+		if all(v==0 for v in partialGradient(pointOld[0],pointOld[1])):
+			optimum=1
+			break
 		print("Iteration number "+ str(i+1) +" : ")
 		if i==0:
 			partialGradNew=partialGradient(pointOld[0],pointOld[1])
@@ -80,7 +86,9 @@ def main():
 		partialGradOld=partialGradNew
 
 		print "Point",(i+1)," : ",pointNew
-		   	
+
+	if optimum:
+		print "Optimum solution"	   	
 	print "Point :",pointNew,", f(",pointNew[0],",",pointNew[1],")","=",f(function,pointNew[0],pointNew[1])
 	
 
