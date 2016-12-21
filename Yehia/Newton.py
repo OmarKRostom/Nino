@@ -42,9 +42,9 @@ def getInverseOfHessianMatrix(X,Y):
 	
 def main():
 	#function to be evaluated (user defined)
-	function=x-y+2*x**2+2*x*y+y**2
+	function=1*(y-((5.1/(4*(22/7)**2))*x**2)+((5/(22/7))*x)-6)**2+10*(1-(1/(8*(22/7))))*cos(x)+10
 	#intial condition (user defined)
-	intialCondition = np.array([0,0])
+	intialCondition = np.array([1,1])
 	#number of iterations (user defined)
 	numberOfIterations=10
 	#optimum solution (stoping creteria encountered--> partialGradient=[0 0])

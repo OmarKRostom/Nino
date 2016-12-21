@@ -3,6 +3,7 @@ import numpy as np
 from numpy.linalg import inv
 from sympy import *
 import math
+from decimal import Decimal
 
 #creating basic variables; x and y and l=lambda
 x, y, l = symbols('x y l', real=True)
@@ -25,6 +26,7 @@ def gradientF(function):
 	global deltaF
 	deltaF=np.array([fx,fy])
 
+
 #given 2 points x and y, return the value of the gradient matrix at these points(delta f1)
 def partialGradient(X,Y):
 	global deltaF
@@ -36,9 +38,20 @@ def partialGradient(X,Y):
 def derivative(function):
 	return diff(function)
 
-#given a function, solve the function in terms of lambda
-def solveEqn(function):
-	return solve(function,l)
+#given a function, solve the function in terms of lambda, 
+#if lambda have more than 1 value return real value max/min   
+def solveEqn(function,MaxMinFlag):
+	lamda=solve(function,l,check=False)
+	realvalue=complex(lamda[0]).real
+	for i in range(len(lamda)):		
+		temp=complex(lamda[i]).real
+		if MaxMinFlag==1:
+			if realvalue<temp:
+				realvalue=complex(lamda[i]).real
+		else:
+			if realvalue>temp:
+				realvalue=complex(lamda[i]).real
+	return realvalue
 
 #given 2 matrices; matrix1 and matrix2, return |matrix1|^2 / |matrix2|^2	
 def getMagnitudes(matrix1,matrix2):
@@ -50,11 +63,11 @@ def getMagnitudes(matrix1,matrix2):
 def main():
 
 	#function to be evaluated (user defined)
-	function=x-y+2*x**2+2*x*y+y**2	
+	function=-cos(x)*cos(y)*exp(-(x-(22/7))**2-(y-(22/7))**2)
 	#intial condition (user defined)
-	intialCondition = np.array([0,0])
+	intialCondition = np.array([2,2])
 	#number of iterations (user defined) 
-	numberOfIterations=10
+	numberOfIterations=100
 	#maximize or minimize; 1 for maximize or -1 for minimize (user defined) 
 	MaxMinFlag=-1 
 	#optimum solution (stoping creteria encountered--> partialGradient=[0 0])
@@ -62,6 +75,7 @@ def main():
 
 	gradientF(function)
 	pointOld=intialCondition
+
 			
 	for i in range(numberOfIterations):
 		if all(v==0 for v in partialGradient(pointOld[0],pointOld[1])):
@@ -69,16 +83,19 @@ def main():
 			break
 		print("Iteration number "+ str(i+1) +" : ")
 		if i==0:
-			partialGradNew=partialGradient(pointOld[0],pointOld[1])
+			partialGradNew=partialGradient(pointOld[0],pointOld[1]) 
 			directionNew=MaxMinFlag*partialGradNew			
 		else:
 			partialGradNew=partialGradient(pointOld[0],pointOld[1])
 			directionNew=(MaxMinFlag*partialGradNew)+(getMagnitudes(partialGradNew,partialGradOld)*directionOld)
 
+
 		pointNew=pointOld + l*directionNew
 		functionWithLamda=subF(function,pointNew[0],pointNew[1])
 		dFunctionWithLamda=derivative(functionWithLamda)
-		lamda=solveEqn(dFunctionWithLamda)
+		lamda=solveEqn(dFunctionWithLamda,MaxMinFlag)
+		#print "Here ",lamda
+		
 		pointNew=pointOld+(lamda*directionNew) 	
 		
 		pointOld=pointNew

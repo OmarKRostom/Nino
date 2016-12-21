@@ -37,9 +37,20 @@ def partialGradient(X,Y):
 def derivative(function):
 	return diff(function)
 
-#given a function, solve the function in terms of lambda
-def solveEqn(function):
-	return solve(function,l)
+#given a function, solve the function in terms of lambda, 
+#if lambda have more than 1 value return real value max/min   
+def solveEqn(function,MaxMinFlag):
+	lamda=solve(function,l,check=False)
+	realvalue=complex(lamda[0]).real
+	for i in range(len(lamda)):		
+		temp=complex(lamda[i]).real
+		if MaxMinFlag==1:
+			if realvalue<temp:
+				realvalue=complex(lamda[i]).real
+		else:
+			if realvalue>temp:
+				realvalue=complex(lamda[i]).real
+	return realvalue
 	
 #given 2 matrices; matrix1 and matrix2, return |matrix1|^2 / |matrix2|^2	
 def getMagnitudes(matrix1,matrix2):
@@ -92,7 +103,7 @@ def main():
 		pointNew=pointOld + l*direction
 		functionWithLamda=subF(function,pointNew[0],pointNew[1])
 		dFunctionWithLamda=derivative(functionWithLamda)
-		lamda=solveEqn(dFunctionWithLamda)
+		lamda=solveEqn(dFunctionWithLamda,MaxMinFlag)
 		pointNew=pointOld+(lamda*direction) 	
 		
 		pointOld=pointNew
