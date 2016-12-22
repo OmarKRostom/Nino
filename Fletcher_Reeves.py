@@ -4,6 +4,10 @@ from numpy.linalg import inv
 from sympy import *
 import math
 from decimal import Decimal
+import plot
+
+xArr = []
+yArr = []
 
 #creating basic variables; x and y and l=lambda
 x, y, l = symbols('x y l', real=True)
@@ -63,9 +67,9 @@ def getMagnitudes(matrix1,matrix2):
 def main():
 
 	#function to be evaluated (user defined)
-	function=-cos(x)*cos(y)*exp(-(x-(22/7))**2-(y-(22/7))**2)
+	function=6*(x**2)-6*(x*y)+2*(y**2)-x-2*y
 	#intial condition (user defined)
-	intialCondition = np.array([2,2])
+	intialCondition = np.array([0,0])
 	#number of iterations (user defined) 
 	numberOfIterations=100
 	#maximize or minimize; 1 for maximize or -1 for minimize (user defined) 
@@ -101,13 +105,14 @@ def main():
 		pointOld=pointNew
 		directionOld=directionNew
 		partialGradOld=partialGradNew
-
+		xArr.append(pointNew[0])
+		yArr.append(pointNew[1])
 		print "Point",(i+1)," : ",pointNew
 
 	if optimum:
 		print "Optimum solution"	   	
 	print "Point :",pointNew,", f(",pointNew[0],",",pointNew[1],")","=",f(function,pointNew[0],pointNew[1])
-	
+	plot.plot3D(xArr,yArr)
 
 if __name__=="__main__":
 	main()

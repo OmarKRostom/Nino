@@ -62,7 +62,7 @@ def getMagnitudes(matrix1,matrix2):
 def main():
 
 	#function to be evaluated (user defined)
-	function=6*(x**2)-6*x*y+2*(y**2)-x-2*y	
+	function=100*(y-x**2)**2+(1-x)**2
 
 	#intial condition (user defined)
 	intialCondition = np.array([0,0])
@@ -75,7 +75,7 @@ def main():
 
 	gradientF(function)#to check the stoppping creteria only in this method
 	pointOld=intialCondition
-
+	optimum = 0
 			
 	for i in range(numberOfIterations):
 		if all(v==0 for v in partialGradient(pointOld[0],pointOld[1])):

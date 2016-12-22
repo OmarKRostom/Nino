@@ -42,13 +42,12 @@ def getInverseOfHessianMatrix(X,Y):
 	
 def main():
 	#function to be evaluated (user defined)
-	function=1*(y-((5.1/(4*(22/7)**2))*x**2)+((5/(22/7))*x)-6)**2+10*(1-(1/(8*(22/7))))*cos(x)+10
+	function= 100*(y-x**2)**2+(1-x)**2
 	#intial condition (user defined)
 	intialCondition = np.array([1,1])
 	#number of iterations (user defined)
 	numberOfIterations=10
 	#optimum solution (stoping creteria encountered--> partialGradient=[0 0])
-	optimum=0
 
 	gradientF(function)
 	pointOld=intialCondition
@@ -56,14 +55,12 @@ def main():
 	for i in range(numberOfIterations):
 		if all(v==0 for v in partialGradient(pointOld[0],pointOld[1])):
 			optimum=1
-			break
 		print("Iteration number "+ str(i+1) +" : ")
 		pointNew = pointOld - (partialGradient(pointOld[0],pointOld[1]).dot(getInverseOfHessianMatrix(pointOld[0],pointOld[1])))
 		pointOld = pointNew
-		print "Point",(i+1)," : ",pointNew   
-	if optimum:
+		print "Point :",pointNew,", f(",pointNew[0],",",pointNew[1],")","=",f(function,pointNew[0],pointNew[1])
+	if optimum==1:
 		print "Optimum solution"
-	print "Point :",pointNew,", f(",pointNew[0],",",pointNew[1],")","=",f(function,pointNew[0],pointNew[1])
 	
 if __name__=="__main__":
 	main()
