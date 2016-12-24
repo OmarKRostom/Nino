@@ -15,7 +15,7 @@ Y = np.arange(-2, 3.+s, s)
 X, Y = np.meshgrid(X, Y)
 
 
-Z =1*(Y-((5.1/(4*(22/7)**2))*X**2)+((5/(22/7))*X)-6)**2+10*(1-(1/(8*(22/7))))*np.cos(X)+10 
+Z =X**2+2*Y**2
 surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.coolwarm,
          linewidth=0, antialiased=False)  #Try coolwarm vs jet
 

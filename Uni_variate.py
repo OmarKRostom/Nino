@@ -62,7 +62,7 @@ def getMagnitudes(matrix1,matrix2):
 def main():
 
 	#function to be evaluated (user defined)
-	function=100*(y-x**2)**2+(1-x)**2
+	function=10.2+(x**2-10*sympy.cos(2*(22/7)*x))+(y**2-10*sympy.cos(2*(22/7)*y))
 
 	#intial condition (user defined)
 	intialCondition = np.array([0,0])
