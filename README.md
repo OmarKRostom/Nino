@@ -25,4 +25,5 @@ This project objective was to illustrate various optimization techniques using p
 
 # Team Members
 1) Yehia Arafa <yehiaarafa11@gmail.com>
+
 2) Ali Rashad <Ali.mrashad@hotmail.com>
